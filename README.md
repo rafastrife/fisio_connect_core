@@ -7,24 +7,42 @@ API REST desenvolvida em Django com Django REST Framework para o sistema Fisio C
 - **Python 3.13+**
 - **Django 5.1.3**
 - **Django REST Framework 3.15.2**
-- **SQLite** (desenvolvimento)
+- **PostgreSQL 15** (via Docker)
+- **PgAdmin 4** (interface web para PostgreSQL)
 
 ## 📋 Pré-requisitos
 
 - Python 3.13 ou superior
 - pip (gerenciador de pacotes Python)
 - Git
+- Docker e Docker Compose (para PostgreSQL)
 
 ## 🔧 Instalação e Configuração
 
-### 1. Clone o repositório
+### Opção 1: Setup Rápido (Recomendado)
+
+```bash
+# Clone o repositório
+git clone <url-do-repositorio>
+cd fisio_connect_core
+
+# Setup completo com PostgreSQL
+make setup-dev
+
+# Ou setup completo com SQLite
+make setup
+```
+
+### Opção 2: Setup Manual
+
+#### 1. Clone o repositório
 
 ```bash
 git clone <url-do-repositorio>
 cd fisio_connect_core
 ```
 
-### 2. Crie um ambiente virtual (recomendado)
+#### 2. Crie um ambiente virtual (recomendado)
 
 ```bash
 # Criar ambiente virtual
@@ -37,40 +55,62 @@ source venv/bin/activate
 venv\Scripts\activate
 ```
 
-### 3. Instale as dependências
+#### 3. Instale as dependências
 
 ```bash
+make install
+# ou
 pip install -r requirements.txt
 ```
 
-### 4. Configure as variáveis de ambiente
-
-Crie um arquivo `.env` na raiz do projeto (opcional para desenvolvimento):
+### 4. Configure o PostgreSQL com Docker
 
 ```bash
-# Exemplo de arquivo .env
-SECRET_KEY=sua-chave-secreta-aqui
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1
+# Iniciar containers do PostgreSQL e PgAdmin
+make docker-start
+
+# Verificar status dos containers
+make docker-status
 ```
 
-### 5. Execute as migrações
+**Acesso ao PgAdmin:**
+- URL: http://localhost:8080
+- Email: admin@fisioconnect.com
+- Senha: admin123
+
+### 5. Configure as variáveis de ambiente
+
+Copie o arquivo de exemplo e configure suas variáveis:
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+cp env.example .env
+# Edite o arquivo .env conforme necessário
 ```
 
-### 6. Crie um superusuário (opcional)
+### 6. Execute as migrações
+
+```bash
+# Para usar PostgreSQL (recomendado)
+make migrate-dev
+
+# Para usar SQLite (alternativo)
+make migrate
+```
+
+### 7. Crie um superusuário (opcional)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### 7. Execute o servidor de desenvolvimento
+### 8. Execute o servidor de desenvolvimento
 
 ```bash
-python manage.py runserver
+# Para usar PostgreSQL
+make run-dev
+
+# Para usar SQLite (padrão)
+make run
 ```
 
 O servidor estará disponível em: http://localhost:8000
@@ -92,10 +132,14 @@ fisio_connect_core/
 ├── fisio_connect_core/     # Configurações do projeto
 │   ├── __init__.py
 │   ├── settings.py        # Configurações do Django
+│   ├── settings_dev.py    # Configurações para desenvolvimento
 │   ├── urls.py            # URLs principais
 │   └── wsgi.py            # Configuração WSGI
 ├── manage.py              # Script de gerenciamento Django
+├── Makefile               # Comandos de automação
+├── docker-compose.yml     # Configuração do Docker Compose
 ├── requirements.txt       # Dependências do projeto
+├── env.example           # Exemplo de variáveis de ambiente
 ├── .gitignore            # Arquivos ignorados pelo Git
 └── README.md             # Este arquivo
 ```
@@ -119,17 +163,63 @@ fisio_connect_core/
 
 ## 🛠️ Comandos Úteis
 
+### Setup Rápido
+
+```bash
+# Ver todos os comandos disponíveis
+make help
+
+# Setup completo com PostgreSQL
+make setup-dev
+
+# Setup completo com SQLite
+make setup
+
+# Ambiente completo de desenvolvimento
+make dev
+```
+
+### Docker
+
+```bash
+# Iniciar containers
+make docker-start
+
+# Parar containers
+make docker-stop
+
+# Reiniciar containers
+make docker-restart
+
+# Ver logs dos containers
+make docker-logs
+
+# Ver status dos containers
+make docker-status
+
+# Limpar containers e volumes
+make docker-clean
+```
+
 ### Desenvolvimento
 
 ```bash
-# Executar servidor de desenvolvimento
-python manage.py runserver
+# Executar servidor de desenvolvimento com PostgreSQL
+make run-dev
 
-# Executar servidor em porta específica
-python manage.py runserver 8001
+# Executar servidor de desenvolvimento com SQLite
+make run
 
-# Executar servidor em modo debug
-python manage.py runserver --verbosity 2
+# Executar testes
+make test
+
+# Abrir shell Django
+make shell-dev  # PostgreSQL
+make shell      # SQLite
+
+# Criar superusuário
+make superuser-dev  # PostgreSQL
+make superuser      # SQLite
 ```
 
 ### Banco de Dados
@@ -256,8 +346,43 @@ urlpatterns = [
 ### 5. Execute as migrações
 
 ```bash
-python manage.py makemigrations
-python manage.py migrate
+# Para PostgreSQL
+make migrate-dev
+
+# Para SQLite
+make migrate
+```
+
+## 🛠️ Comandos Makefile
+
+O projeto usa um `Makefile` para facilitar o desenvolvimento. Execute `make help` para ver todos os comandos disponíveis.
+
+### Comandos Principais
+
+```bash
+# Ver todos os comandos
+make help
+
+# Setup completo
+make setup-dev    # PostgreSQL
+make setup        # SQLite
+
+# Desenvolvimento
+make run-dev      # Servidor com PostgreSQL
+make run          # Servidor com SQLite
+make test         # Executar testes
+make shell-dev    # Shell Django (PostgreSQL)
+make shell        # Shell Django (SQLite)
+
+# Docker
+make docker-start # Iniciar containers
+make docker-stop  # Parar containers
+make docker-logs  # Ver logs
+
+# Manutenção
+make clean        # Limpar arquivos temporários
+make backup       # Backup do banco
+make restore FILE=backup.json  # Restaurar backup
 ```
 
 ## 🤝 Contribuindo

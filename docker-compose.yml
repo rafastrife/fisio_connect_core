@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: fisio_connect_db
+    restart: always
+    environment:
+      POSTGRES_DB: fisio_connect
+      POSTGRES_USER: fisio_user
+      POSTGRES_PASSWORD: fisio_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fisio_network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: fisio_connect_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@fisioconnect.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - fisio_network
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  fisio_network:
+    driver: bridge 
