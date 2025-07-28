@@ -274,7 +274,7 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 
 ## 👥 Autores
 
-- **Seu Nome** - *Desenvolvimento inicial* - [SeuGitHub](https://github.com/seugithub)
+- **Rafaell Santana** - *Desenvolvimento inicial* - [SeuGitHub](https://github.com/rafastrife)
 
 ## 🙏 Agradecimentos
 
