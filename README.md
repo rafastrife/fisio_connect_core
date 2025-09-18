@@ -144,6 +144,18 @@ fisio_connect_core/
 └── README.md             # Este arquivo
 ```
 
+## 📖 Documentação da API
+
+A documentação detalhada da API está disponível no diretório `docs/`:
+
+- Visão geral e índice: `docs/README.md`
+- Modelos: `docs/models.md`
+- Serializers: `docs/serializers.md`
+- ViewSets e rotas: `docs/viewsets.md`
+- Autenticação: `docs/auth.md`
+- Endpoints: `docs/endpoints.md`
+- Exemplos (curl e Python): `docs/examples.md`
+
 ## 🔌 Endpoints da API
 
 ### Health Check
